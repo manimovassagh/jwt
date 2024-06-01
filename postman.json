@@ -1,0 +1,127 @@
+{
+    "info": {
+      "name": "JWT API Test",
+      "_postman_id": "12345-67890-abcdef",
+      "description": "Collection for testing JWT API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Signup",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"username\": \"testuser\",\"password\": \"password123\"}"
+          },
+          "url": {
+            "raw": "http://localhost:8080/signup",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "8080",
+            "path": ["signup"]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "Login",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"username\": \"testuser\",\"password\": \"password123\"}"
+          },
+          "url": {
+            "raw": "http://localhost:8080/login",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "8080",
+            "path": ["login"]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var jsonData = JSON.parse(responseBody);",
+                "pm.globals.set(\"access_token\", jsonData.access_token);",
+                "pm.globals.set(\"refresh_token\", jsonData.refresh_token);"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Protected Route",
+        "request": {
+          "method": "GET",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer {{access_token}}"
+            }
+          ],
+          "url": {
+            "raw": "http://localhost:8080/protected",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "8080",
+            "path": ["protected"]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "Refresh Token",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"refresh_token\": \"{{refresh_token}}\"}"
+          },
+          "url": {
+            "raw": "http://localhost:8080/refresh",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "8080",
+            "path": ["refresh"]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var jsonData = JSON.parse(responseBody);",
+                "pm.globals.set(\"access_token\", jsonData.access_token);"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      }
+    ]
+  }
