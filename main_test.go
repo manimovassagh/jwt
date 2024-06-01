@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"example.com/m/types"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -32,7 +33,7 @@ func setupRouter() *chi.Mux {
 func TestSignupHandler(t *testing.T) {
 	router := setupRouter()
 
-	user := User{
+	user := types.User{
 		Username: "testuser",
 		Password: "password123",
 	}
@@ -50,7 +51,7 @@ func TestLoginHandler(t *testing.T) {
 	router := setupRouter()
 
 	// Signup the user first
-	user := User{
+	user := types.User{
 		Username: "testuser",
 		Password: "password123",
 	}
@@ -114,7 +115,7 @@ func TestRefreshHandler(t *testing.T) {
 	router := setupRouter()
 
 	// Signup the user first
-	user := User{
+	user := types.User{
 		Username: "testuser",
 		Password: "password123",
 	}
@@ -156,7 +157,7 @@ func TestRefreshHandler(t *testing.T) {
 // generateTestToken is used to generate a test JWT token for testing purposes
 func generateTestToken(username string, key []byte, expiration time.Duration) (string, error) {
 	expirationTime := time.Now().Add(expiration)
-	claims := &Claims{
+	claims := &types.Claims{
 		Username: username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"example.com/m/types"
 	"fmt"
 	"net/http"
 	"strings"
@@ -15,18 +16,6 @@ import (
 
 var jwtKey = []byte("my_secret_key")
 var refreshKey = []byte("my_refresh_secret_key")
-
-// User represents a user in the system
-type User struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-// Claims represents the JWT claims
-type Claims struct {
-	Username string `json:"username"`
-	jwt.StandardClaims
-}
 
 // In-memory user store
 var userStore = struct {
@@ -53,7 +42,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 		tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 
-		claims := &Claims{}
+		claims := &types.Claims{}
 		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 			return jwtKey, nil
 		})
@@ -69,7 +58,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 // SignupHandler handles user registration
 func SignupHandler(w http.ResponseWriter, r *http.Request) {
-	var user User
+	var user types.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
@@ -89,7 +78,7 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 
 // LoginHandler handles user login and returns access and refresh tokens
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	var user User
+	var user types.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
@@ -141,7 +130,7 @@ func RefreshHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	claims := &Claims{}
+	claims := &types.Claims{}
 	token, err := jwt.ParseWithClaims(refreshToken, claims, func(token *jwt.Token) (interface{}, error) {
 		return refreshKey, nil
 	})
@@ -175,7 +164,7 @@ func RefreshHandler(w http.ResponseWriter, r *http.Request) {
 // generateToken generates a JWT token
 func generateToken(username string, key []byte, expiration time.Duration) (string, error) {
 	expirationTime := time.Now().Add(expiration)
-	claims := &Claims{
+	claims := &types.Claims{
 		Username: username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
