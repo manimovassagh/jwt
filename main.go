@@ -2,15 +2,17 @@ package main
 
 import (
 	"encoding/json"
-	"example.com/m/types"
 	"fmt"
 	"net/http"
 	"strings"
 	"sync"
 	"time"
 
+	"example.com/m/types"
+
 	"github.com/dgrijalva/jwt-go"
-	"github.com/go-chi/chi/v5"
+
+	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
@@ -31,6 +33,7 @@ var refreshTokens = struct {
 
 // AuthMiddleware validates the JWT
 func AuthMiddleware(next http.Handler) http.Handler {
+
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenString := r.Header.Get("Authorization")
 
