@@ -1,2 +1,2 @@
 
-const name :string ="mani"
+const name :string =
