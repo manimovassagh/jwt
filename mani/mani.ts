@@ -1,2 +1,2 @@
 
-const name :str
+const name :s
