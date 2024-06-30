@@ -1,2 +1,2 @@
 
-const name :strin
+const name :str
